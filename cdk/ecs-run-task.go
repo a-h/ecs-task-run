@@ -25,10 +25,9 @@ func NewEcsRunTaskStack(scope constructs.Construct, id string, props *EcsRunTask
 		// If NatGateways are available, we can host in any subnet.
 		NatGateways: jsii.Number(0),
 	})
-	cluster := awsecs.NewCluster(stack, jsii.String("EcsCluster"), &awsecs.ClusterProps{
+	awsecs.NewCluster(stack, jsii.String("EcsCluster"), &awsecs.ClusterProps{
 		Vpc: vpc,
 	})
-	cluster.EnableFargateCapacityProviders()
 
 	td := awsecs.NewFargateTaskDefinition(stack, jsii.String("helloTask"), &awsecs.FargateTaskDefinitionProps{
 		MemoryLimitMiB: jsii.Number(512),
@@ -36,6 +35,9 @@ func NewEcsRunTaskStack(scope constructs.Construct, id string, props *EcsRunTask
 	})
 	td.AddContainer(jsii.String("helloContainer"), &awsecs.ContainerDefinitionOptions{
 		Image: awsecs.ContainerImage_FromRegistry(jsii.String("hello-world"), &awsecs.RepositoryImageProps{}),
+		Logging: awsecs.LogDriver_AwsLogs(&awsecs.AwsLogDriverProps{
+			StreamPrefix: jsii.String("helloTask"),
+		}),
 	})
 
 	return stack

@@ -16,7 +16,7 @@ func main() {
 		// aws ecs list-clusters
 		Cluster: aws.String("EcsRunTaskStack-EcsCluster97242B84-J5ZmLs75HupH"),
 		// aws ecs list-task-definitions
-		TaskDefinition: aws.String("EcsRunTaskStackhelloTask4FF92611:1"),
+		TaskDefinition: aws.String("EcsRunTaskStackhelloTask4FF92611"),
 		NetworkConfiguration: &ecs.NetworkConfiguration{
 			// aws ec2 describe-vpcs
 			// aws ec2 describe-subnets --vpc=vpc-0a3d16b68fab39248
