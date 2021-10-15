@@ -14,9 +14,9 @@ import (
 )
 
 type config struct {
-	ClusterArn        string
+	ClusterARN        string
 	ContainerName     string
-	TaskDefinitionArn string
+	TaskDefinitionARN string
 	Subnets           []string
 	S3Bucket          string
 	IsValid           bool
@@ -35,13 +35,13 @@ func main() {
 
 	// Load config.
 	c.IsValid = true
-	c.ClusterArn = os.Getenv("CLUSTER_ARN")
-	if c.ClusterArn == "" {
+	c.ClusterARN = os.Getenv("CLUSTER_ARN")
+	if c.ClusterARN == "" {
 		logger.Error("CLUSTER_ARN not set")
 		c.IsValid = false
 	}
-	c.TaskDefinitionArn = os.Getenv("TASK_DEFINITION_ARN")
-	if c.TaskDefinitionArn == "" {
+	c.TaskDefinitionARN = os.Getenv("TASK_DEFINITION_ARN")
+	if c.TaskDefinitionARN == "" {
 		logger.Error("TASK_DEFINITION_ARN not set")
 		c.IsValid = false
 	}
@@ -76,11 +76,11 @@ func handler(ctx context.Context, s3Event events.S3Event) (err error) {
 		s3 := record.S3
 		logger.Info("Processing File", zap.Int("index", i), zap.Int("count", len(s3Event.Records)), zap.String("bucketName", s3.Bucket.Name), zap.String("objectKey", s3.Object.Key))
 		input := &ecs.RunTaskInput{
-			Cluster:        &c.ClusterArn,
-			TaskDefinition: &c.TaskDefinitionArn,
+			Cluster:        &c.ClusterARN,
+			TaskDefinition: &c.TaskDefinitionARN,
 			NetworkConfiguration: &ecs.NetworkConfiguration{
 				AwsvpcConfiguration: &ecs.AwsVpcConfiguration{
-					// Set to true if in the public subnet and you want Internet access.
+					// Set to true if in the public subnet so that the container can be downloaded.
 					AssignPublicIp: aws.String(ecs.AssignPublicIpEnabled),
 					Subnets:        aws.StringSlice(c.Subnets),
 				},
